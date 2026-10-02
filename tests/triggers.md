@@ -6,6 +6,20 @@
 
 ## ak-domain-learner
 
+应触发：
+
+1. 我想系统学一下量化交易，完全零基础
+2. 帮我从零入门 Kubernetes
+3. 给我讲讲保险这个行业，我想能跟内行聊
+4. 继续学 Rust，接着上次
+5. I want to learn color grading from zero
+
+不应触发：
+
+1. Docker 是什么？
+2. 帮我读一下这个 PDF 并总结
+3. 调研一下 2026 年的 AI Agent 框架
+
 ## ak-weekly-review
 
 ## ak-sprout
