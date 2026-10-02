@@ -89,7 +89,7 @@ metadata:
 "<本 skill 目录>/scripts/find-related.sh" --scope "<notesDir>" --limit 12 keywords "<内核关键词>,<回响领域词>,..."
 ```
 
-`scripts/find-related.sh` 通过 Obsidian CLI 读取 Obsidian 的笔记索引，需要 Obsidian 正在运行，且 `notesDir` 在当前打开的库里。命令不存在、Obsidian 没开，或退出码不是 0 时，改用 grep：
+`scripts/find-related.sh` 通过 Obsidian CLI 读取 Obsidian 的笔记索引，需要 Obsidian 正在运行，且 `notesDir` 在当前打开的库里（不在的话脚本会报错、退出码 2）。命令不存在、Obsidian 没开，或退出码不是 0 时，改用 grep；脚本返回 0 条命中、你又怀疑是库没对上时，也用 grep 复查一次：
 
 ```bash
 grep -rl --include='*.md' -e "<词1>" -e "<词2>" "<notesDir>"

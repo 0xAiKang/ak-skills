@@ -25,7 +25,7 @@ metadata:
 **读不到配置时**（脚本会返回「找不到配置」），在对话里最多问 2 个问题：
 
 1. 起好名字的图归档到哪个目录？
-2. 新粘贴的图落在哪里？不知道就按 Obsidian 的附件设置。
+2. 新粘贴的图落在哪里？不知道就按 Obsidian 的附件设置：这时配置里不写 `pendingDir` 这个键（写成空字符串也一样）。库根目录要明确写 `"/"`。
 
 把要写入的 JSON 给用户看，用户同意后写入。脚本只认这个文件，所以本 skill 必须有配置文件才能运行；用户不同意写入，就停下来说明原因。
 
@@ -73,16 +73,16 @@ obsidian eval code="$(cat "<skill目录>/scripts/config.js" "<skill目录>/scrip
 
 `<skill目录>` 换成本 SKILL.md 所在目录的绝对路径。Obsidian 桌面端要开着，命令作用于当前打开的库。
 
-### 1. 记基线 + 扫描
+### 1. 扫描 + 记基线
 
 ```bash
-obsidian eval code="$(cat "<skill目录>/scripts/config.js" "<skill目录>/scripts/verify.js")"   # 存基线
 obsidian eval code="$(cat "<skill目录>/scripts/config.js" "<skill目录>/scripts/scan.js")"
+obsidian eval code="$(cat "<skill目录>/scripts/config.js" "<skill目录>/scripts/verify.js")"   # 存基线
 ```
 
-scan 返回「找不到配置」时，先回到「零、读配置」。
+先扫描：scan 返回「找不到配置」时，先回到「零、读配置」，配好再从这一步重新开始。scan 是只读的，和 verify 谁先谁后不影响结果；先跑它，是为了配置没好时不留下一份没用的基线。
 
-`verify.js` 首次运行会把当前全库未解析链接数写进基线文件，最后一步用它做差值比对。
+`verify.js` 第一次运行会把当前全库未解析链接数写进基线文件，最后一步用它做差值比对。**这一步的 verify 必须返回「基线已记录」**；返回「比对完成」，说明 `/tmp/ak-image-organize/` 里残留了上一次的基线（比如上次在第 3 步被否决了），它已经被这次比对清掉，再跑一次 verify，让它重新记录。第 4 步的 verify 必须返回「比对完成」，返回「基线已记录」说明基线丢了，这一批的断链校验没做成，要告诉用户。
 
 `scan.js` 默认只取 **10 张**。要改批量或指定文件，先写配置：
 

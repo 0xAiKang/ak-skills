@@ -15,8 +15,11 @@
   if (!entries.length) return JSON.stringify({ error: "日志为空，无可回滚内容" });
 
   let batch = entries[entries.length - 1].batch;
+  // 读完即删（和 scan、apply 一样）：留着的话，下次默认回滚会回滚到这个旧批次
   try {
-    const cfg = JSON.parse(fs.readFileSync(`${AK_TMP_DIR}/rollback-config.json`, "utf8"));
+    const cfgPath = `${AK_TMP_DIR}/rollback-config.json`;
+    const cfg = JSON.parse(fs.readFileSync(cfgPath, "utf8"));
+    fs.unlinkSync(cfgPath);
     if (cfg.batch) batch = cfg.batch;
   } catch (e) {}
 

@@ -31,3 +31,23 @@ test("去掉首尾斜杠", () =>
   assert.equal(ctx.akResolvePendingDir("/inbox/", "/", "attachments"), "inbox"));
 test("~ 展开为家目录", () => assert.equal(ctx.akExpandHome("~/x"), os.homedir() + "/x"));
 test("非 ~ 路径原样返回", () => assert.equal(ctx.akExpandHome("/a/b"), "/a/b"));
+
+test("pendingDir 写成空字符串等于没配置：附件设置为 ./ 时不按位置判断", () =>
+  assert.equal(ctx.akResolvePendingDir("", "./", "attachments"), null));
+test("pendingDir 写成空字符串等于没配置：附件设置为 / 时是根目录", () =>
+  assert.equal(ctx.akResolvePendingDir("", "/", "attachments"), ""));
+
+// akLoadConfig：用假的 fs 和 app，不碰真实的配置文件
+function loadWith(json, attach = "/") {
+  const fake = (name) => (name === "fs"
+    ? { readFileSync: () => { if (json === null) throw new Error("ENOENT"); return JSON.stringify(json); } }
+    : require(name));
+  const c = { require: fake, app: { vault: { getConfig: () => attach } } };
+  vm.runInNewContext(src, c);
+  return c.akLoadConfig();
+}
+test("akLoadConfig：没有配置文件时报错", () => assert.match(loadWith(null).error, /找不到配置/));
+test("akLoadConfig：archiveDir 是 / 时报错，不能把图归档到库根目录", () =>
+  assert.match(loadWith({ archiveDir: "/" }).error, /archiveDir/));
+test("akLoadConfig：logDir 不写时展开成家目录下的默认目录", () =>
+  assert.equal(loadWith({ archiveDir: "attachments" }).logDir, os.homedir() + "/.config/ak-skills/ak-image-organize"));

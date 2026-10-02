@@ -16,13 +16,13 @@
 #   find-related.sh neighbors <笔记名>      2-hop 图扩散
 #
 # 选项：
-#   --scope <目录>        只搜这个目录下的笔记（库内相对路径，或库内的绝对路径）；
-#                         不给就搜整个库
+#   --scope <目录>        只搜这个目录下的笔记（库内相对路径，或库内的绝对路径，~/ 开头会展开）；
+#                         不给就搜整个库；绝对路径不在 Obsidian 当前打开的库里时报错、退出码 2
 #   --json                输出 JSON（默认紧凑文本）
 #   --limit N             最多返回 N 条（默认 20）
 #   --exclude <笔记名>    排除某条（写新笔记找相关时排除自己）
 #
-# 退出码：0 成功（即使 0 结果也算成功），1 用法错误，2 执行错误。
+# 退出码：0 成功（即使 0 结果也算成功），1 用法错误，2 执行错误（含 --scope 不在当前库里）。
 
 set -euo pipefail
 
@@ -59,6 +59,11 @@ if [[ ${#POSITIONAL[@]} -lt 2 ]]; then
   exit 1
 fi
 
+# ~ 和 ~/ 开头的 --scope 展开成家目录（JS 那边不认 ~）
+if [[ "$SCOPE" == "~" || "$SCOPE" == "~/"* ]]; then
+  SCOPE="$HOME${SCOPE:1}"
+fi
+
 MODE="${POSITIONAL[0]}"
 ARG="${POSITIONAL[1]}"
 
@@ -82,10 +87,18 @@ const exclude = EXCLUDE_PLACEHOLDER;
 const format = FORMAT_PLACEHOLDER;
 // 搜索范围：库内相对目录，结尾带 /；空字符串表示整个库。
 // 传入库内的绝对路径时，先去掉库根目录前缀。
+// 绝对路径不在当前打开的库里时记下原因，run_eval 据此报错退出，不假装成 0 条命中。
+let scopeError = "";
 const scope = (() => {
   let s = SCOPE_PLACEHOLDER;
   const base = app.vault.adapter.basePath + "/";
-  if (s.startsWith("/") && (s + "/").startsWith(base)) s = s.slice(base.length);
+  if (s.startsWith("/") && s.replace(/\/+/g, "") !== "") {
+    if (!(s + "/").startsWith(base)) {
+      scopeError = `--scope 不在 Obsidian 当前打开的库（${base.slice(0, -1)}）里：${s}`;
+      return "";
+    }
+    s = s.slice(base.length);
+  }
   s = s.replace(/^\/+|\/+$/g, "");
   return s ? s + "/" : "";
 })();
@@ -135,9 +148,16 @@ PRELUDE="${PRELUDE//SCOPE_PLACEHOLDER/$SCOPE_JS}"
 run_eval() {
   local body="$1"
   local code="(async () => { $PRELUDE
+if (scopeError) return '__SCOPE_ERROR__' + scopeError;
 $body
 })()"
-  obsidian eval code="$code" | sed '1s/^=> //'
+  local out
+  out=$(obsidian eval code="$code" | sed '1s/^=> //')
+  if [[ "$out" == __SCOPE_ERROR__* ]]; then
+    echo "${out#__SCOPE_ERROR__}" >&2
+    exit 2
+  fi
+  printf '%s\n' "$out"
 }
 
 case "$MODE" in

@@ -24,7 +24,8 @@ function akTrimSlashes(p) {
 //   archiveDir     归档目录
 function akResolvePendingDir(pendingDir, attachSetting, archiveDir) {
   let dir;
-  if (pendingDir !== undefined && pendingDir !== null) {
+  // 空字符串和没写一样：取 Obsidian 的设置。库根目录要明确写 "/"
+  if (pendingDir !== undefined && pendingDir !== null && String(pendingDir).trim() !== "") {
     dir = akTrimSlashes(pendingDir);
   } else {
     const setting = String(attachSetting || "/");
@@ -43,11 +44,12 @@ function akLoadConfig() {
   } catch (e) {
     return { error: `找不到配置 ${AK_CONFIG_PATH}（${e.message}），先按 SKILL.md 第 0 步生成` };
   }
-  if (!cfg.archiveDir) {
-    return { error: `配置 ${AK_CONFIG_PATH} 里没有 archiveDir，先按 SKILL.md 第 0 步补上` };
+  const archiveDir = akTrimSlashes(cfg.archiveDir || "");
+  if (!archiveDir) {
+    return { error: `配置 ${AK_CONFIG_PATH} 里的 archiveDir 没写或是库根目录，先按 SKILL.md 第 0 步补上一个具体的目录` };
   }
   return {
-    archiveDir: akTrimSlashes(cfg.archiveDir),
+    archiveDir,
     pendingDir: akResolvePendingDir(cfg.pendingDir, app.vault.getConfig("attachmentFolderPath"), cfg.archiveDir),
     logDir: akExpandHome(cfg.logDir || "~/.config/ak-skills/ak-image-organize"),
   };
