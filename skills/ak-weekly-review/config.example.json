@@ -1,0 +1,9 @@
+{
+  "diaryDir": "",
+  "diaryFilenameFormat": "YYYY-MM-DD",
+  "weeklyDir": "",
+  "weeklyFilenameFormat": "YYYY-Www",
+  "reviewSections": [],
+  "reviewTags": [],
+  "weeklyTags": []
+}

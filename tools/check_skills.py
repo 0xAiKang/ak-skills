@@ -24,6 +24,7 @@ NAME_RE = re.compile(r"^[a-z0-9]+(-[a-z0-9]+)*$")
 VERSION_RE = re.compile(r"^\d+\.\d+\.\d+$")
 # 只认 ASCII 路径：Python 的 \w 会匹配中文，会把正文里的「scripts/下的脚本」误判成文件引用
 REF_RE = re.compile(r"(?:references|scripts)/[A-Za-z0-9_./-]+")
+LINK_RE = re.compile(r"\]\(([^)\s]+)\)")
 FORBIDDEN_NAMES = {"README.md", ".DS_Store"}
 SKIP_DIRS = {".git", ".superpowers"}
 
@@ -94,6 +95,13 @@ def check_skill(skill_dir):
         ref = ref.rstrip(".")
         if not (skill_dir / ref).exists():
             problems.append(f"{folder}: 正文引用的 {ref} 不存在")
+
+    for target in sorted(set(LINK_RE.findall(body))):
+        if "://" in target or target.startswith(("#", "mailto:")):
+            continue
+        path = target.split("#", 1)[0]
+        if path and not (skill_dir / path).exists():
+            problems.append(f"{folder}: 正文链接指向的 {target} 不存在")
 
     for path in skill_dir.rglob("*"):
         rel = path.relative_to(skill_dir)

@@ -92,6 +92,24 @@ class CheckSkillsTest(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("references/x.md", out)
 
+    def test_markdown_link_target_missing(self):
+        self.write_skill_md(
+            VALID_FRONTMATTER,
+            VALID_BODY + "\n模板见 [references/guide.md](guide.md)。\n",
+        )
+        code, out = self.run_checker()
+        self.assertEqual(code, 1)
+        self.assertIn("guide.md", out)
+        self.assertIn("链接", out)
+
+    def test_external_and_anchor_links_ignored(self):
+        self.write_skill_md(
+            VALID_FRONTMATTER,
+            VALID_BODY + "\n见 [官网](https://example.com) 和 [上文](#演示)。\n",
+        )
+        code, out = self.run_checker()
+        self.assertEqual(code, 0, out)
+
     def test_readme_inside_skill_forbidden(self):
         (self.skill / "README.md").write_text("说明\n", encoding="utf-8")
         code, out = self.run_checker()
