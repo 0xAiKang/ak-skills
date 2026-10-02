@@ -1,0 +1,4 @@
+docs/superpowers/
+.DS_Store
+*.edtz
+__pycache__/
