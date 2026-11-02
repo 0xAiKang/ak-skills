@@ -32,12 +32,12 @@
 
 ## 📋 目录
 
-| Skill | 一句话 | 需要 Obsidian 吗 | 讲解 |
+| Skill | 一句话 | 需要 Obsidian 吗 | 相关文章 |
 |---|---|---|---|
-| 🌱 [**ak-sprout（发芽报告）**](#ak-sprout) | 给一条笔记找到跨领域的「远方回响」，而不是更多同类 | 不需要，有更好 | [公众号文章](https://mp.weixin.qq.com/s/HoC0LYMtugQZpmvFjR2cHw) |
-| 📚 [**ak-domain-learner（学习任何知识）**](#ak-domain-learner) | 让 AI 当你的私人陪练，从零学一个陌生领域，每章答对题才往下走 | 不需要 | [公众号文章](https://mp.weixin.qq.com/s/DF2-X_iXMMz6e28v3Da3EQ) |
-| 📅 [**ak-weekly-review（每周复盘）**](#ak-weekly-review) | 每周回看日记，分七步和自己认真对一次话，找出藏在日常里的暗线 | 不需要，有更好 | [公众号文章](https://mp.weixin.qq.com/s/Urpm5AvEcXOKba-90T63Ig) |
-| 🖼️ [**ak-image-organize（图片整理）**](#ak-image-organize) | 把 `Pasted image` 这类没名字的图，按内容改成认得出的名字，链接一个不断 | 必须 | [公众号文章](https://mp.weixin.qq.com/s/WXJZ1otbGe6xD0TjgqKOKQ) |
+| 🌱 [**ak-sprout（发芽报告）**](#ak-sprout) | 给一条笔记找到跨领域的「远方回响」，而不是更多同类 | 不需要，有更好 | [文章](https://kk2beace.com/blog/obsidian-notes-sprout-get-note-feature/) |
+| 📚 [**ak-domain-learner（学习任何知识）**](#ak-domain-learner) | 让 AI 当你的私人陪练，从零学一个陌生领域，每章答对题才往下走 | 不需要 | [文章](https://kk2beace.com/blog/claude-code-10x-learning-method/) |
+| 📅 [**ak-weekly-review（每周复盘）**](#ak-weekly-review) | 每周回看日记，分七步和自己认真对一次话，找出藏在日常里的暗线 | 不需要，有更好 | [文章](https://kk2beace.com/blog/ai-life-logging-system/) |
+| 🖼️ [**ak-image-organize（图片整理）**](#ak-image-organize) | 把 `Pasted image` 这类没名字的图，按内容改成认得出的名字，链接一个不断 | 必须 | [文章](https://kk2beace.com/blog/gemini-cli-skills-obsidian-image-organize/) |
 
 ---
 
@@ -146,7 +146,7 @@ npx skills add 0xAiKang/ak-skills --skill ak-sprout -g
 
 **需要 Obsidian 吗**：不需要。装了 Obsidian 和 Obsidian CLI 时，它会用自带的脚本在你的库里找可以互链的笔记；没有的话，就用 grep 按关键词搜。
 
-→ [SKILL.md](./skills/ak-sprout/SKILL.md) · [公众号讲解](https://mp.weixin.qq.com/s/HoC0LYMtugQZpmvFjR2cHw)
+→ [SKILL.md](./skills/ak-sprout/SKILL.md) · [相关文章](https://kk2beace.com/blog/obsidian-notes-sprout-get-note-feature/)
 
 </td></tr>
 </table>
@@ -192,7 +192,7 @@ npx skills add 0xAiKang/ak-skills --skill ak-sprout -g
 
 **需要 Obsidian 吗**：不需要。产出是一个普通的 Markdown 文件，放在哪都行。
 
-→ [SKILL.md](./skills/ak-domain-learner/SKILL.md) · [公众号讲解](https://mp.weixin.qq.com/s/DF2-X_iXMMz6e28v3Da3EQ)
+→ [SKILL.md](./skills/ak-domain-learner/SKILL.md) · [相关文章](https://kk2beace.com/blog/claude-code-10x-learning-method/)
 
 </td></tr>
 </table>
@@ -240,7 +240,7 @@ weekly review
 
 **需要 Obsidian 吗**：不需要，有的话更好。周记里指回日记原段落的链接，用的是 Obsidian 的块引用语法，在别的编辑器里只是普通文字，不影响复盘本身。
 
-→ [SKILL.md](./skills/ak-weekly-review/SKILL.md) · [公众号讲解](https://mp.weixin.qq.com/s/Urpm5AvEcXOKba-90T63Ig)
+→ [SKILL.md](./skills/ak-weekly-review/SKILL.md) · [相关文章](https://kk2beace.com/blog/ai-life-logging-system/)
 
 </td></tr>
 </table>
@@ -272,7 +272,7 @@ weekly review
 
 它会先列一张「旧名 → 新名」的预览表，你点头了才动手。默认一次只处理 10 张左右，批量越大，名字起得越糊。
 
-公众号文章里写的是最早的版本（当时用的还是 Gemini CLI）。后来我陆续加了扫描、断链校验和回滚脚本，现在的版本比文章里稳得多。
+文章里写的是最早的版本（当时用的还是 Gemini CLI）。后来我陆续加了扫描、断链校验和回滚脚本，现在的版本比文章里稳得多。
 
 **怎么触发**
 
@@ -284,7 +284,7 @@ weekly review
 
 **需要 Obsidian 吗**：必须。脚本要在 Obsidian 桌面端里，通过 Obsidian CLI（`obsidian` 命令）运行。
 
-→ [SKILL.md](./skills/ak-image-organize/SKILL.md) · [公众号讲解](https://mp.weixin.qq.com/s/WXJZ1otbGe6xD0TjgqKOKQ)
+→ [SKILL.md](./skills/ak-image-organize/SKILL.md) · [相关文章](https://kk2beace.com/blog/gemini-cli-skills-obsidian-image-organize/)
 
 </td></tr>
 </table>
